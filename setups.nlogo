@@ -146,7 +146,10 @@ ask turtles
    fd pasos
    set energia energia - pasos
 
-   if [pcolor] of patch-here = green [set energia energia + alimento]
+   if pcolor = green [
+      set energia energia + alimento
+      set alimento alimento - 1
+    ]
 
    if energia <= 0 [die]
    ]
