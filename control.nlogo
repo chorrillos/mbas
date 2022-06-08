@@ -1,78 +1,110 @@
-;;; creando agentes genéricos
+;;;; interaccion agente-grilla
+
+globals[pasosmax]
+patches-own[alimento]
+turtles-own[energia]
 
 to setup
-  clear-all
-  create-turtles 100
+  ca
+  set pasosmax 10
+  crt 1000[
+    setxy random-xcor random-ycor
+    set energia 10
+  ]
+
+  ask n-of (count patches / 5)  patches[
+    set alimento 10
+    set pcolor green]
   reset-ticks
 end
 
+to go
+ask turtles
+  [
+   if alimento > 0[
+      set energia energia + 1
+      set alimento alimento - 1
+    ]
 
-;to setup
-;  ca
-;  crt 100
-;  reset-ticks
-;end
+   let pasos random pasosmax;temporal
+   fd pasos
+   set energia energia - pasos
+   if energia <= 0 [die]
 
-;;; creando agentes específicos
+   ]
+  tick
+end
 
-;breed [hombres hombre]
-;breed [mujeres mujer]
-;
-;to setup
-;  clear-all
-;  create-hombres 50 [
-;    setxy random-xcor random-ycor
-;    set color white
-;  ]
-;  create-mujeres 50 [
-;    setxy random-xcor random-ycor
-;    set color red
-;  ]
-;  reset-ticks
-;end
-
-
-;;; creando agentes específicos con variables
-;breed [hombres hombre]
-;breed [mujeres mujer]
-;turtles-own [edad]
-;
-;to setup
-;  clear-all
-;  create-hombres 50 [
-;    setxy random-xcor random-ycor
-;    set color white
-;    set edad random 5
-;    set size edad
-;  ]
-;  create-mujeres 50 [
-;    setxy random-xcor random-ycor
-;    set color red
-;    set edad random 5
-;    set size edad
-;  ]
-;  reset-ticks
-;end
-
-;;;; variable del patch
-
-;patches-own[alimento]
-;
-;to setup
-;  ca
-;  crt 100[
-;    setxy random-xcor random-ycor]
-;
-;  ask patches[
-;    set alimento random 100
-;    set pcolor scale-color green alimento 0 100]
-;
-;  reset-ticks
+;to go
+;ask turtles
+;  [
+;   ifelse alimento > 0[
+;      set energia energia + 1
+;      set alimento alimento - 1
+;    ][
+;      set energia energia - 1
+;    ]
+;    ifelse energia > 0 [
+;      let pasos random pasosmax ;temporal
+;      set heading random 360
+;      fd pasos
+;    ][
+;      die
+;    ]
+;   ]
+;  tick
 ;end
 
 
+;to go
+;ask turtles
+;  [
+;   ifelse alimento > 0[
+;      set energia energia + 1
+;      set alimento alimento - 1
+;    ][
+;      set energia energia - 1
+;    ]
+;    ifelse energia > 0 [
+;      let pasos random pasosmax ;temporal
+;      set heading random 360
+;      fd pasos
+;    ][
+;      die
+;    ]
+;   ]
+;  ask patches with [
+;    pcolor = green and alimento <= 0
+;  ][
+;    set pcolor red
+;  ]
+;  tick
+;end
 
-
+;to go
+;  while[count turtles > 0][
+;  ask turtles
+;  [
+;    ifelse alimento > 0[
+;      set energia energia + 1
+;      set alimento alimento - 1
+;    ][
+;      set energia energia - 1
+;    ]
+;    ifelse energia > 0 [
+;      let pasos random pasosmax ;temporal
+;      set heading random 360
+;      fd pasos
+;    ][
+;      die
+;    ]
+;  ] ask patches with [pcolor = green and alimento <= 0][
+;      set pcolor red
+;    ]
+;    tick
+;  ]
+;  stop
+;end
 @#$#@#$#@
 GRAPHICS-WINDOW
 129
@@ -109,6 +141,23 @@ BUTTON
 NIL
 setup
 NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+34
+179
+97
+212
+NIL
+go
+T
 1
 T
 OBSERVER

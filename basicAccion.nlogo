@@ -1,78 +1,88 @@
-;;; creando agentes genéricos
+;;; Movilidad de agentes
 
 to setup
-  clear-all
-  create-turtles 100
+  ca
+  crt 100
   reset-ticks
 end
 
+to go
+  ask turtles[
+    fd 1]
+  tick
+end
+
+;;; Trayectorias de agentes (random walk)
 
 ;to setup
 ;  ca
-;  crt 100
+;  crt 1 [
+;    pen-down]
 ;  reset-ticks
 ;end
-
-;;; creando agentes específicos
-
-;breed [hombres hombre]
-;breed [mujeres mujer]
 ;
-;to setup
-;  clear-all
-;  create-hombres 50 [
-;    setxy random-xcor random-ycor
-;    set color white
-;  ]
-;  create-mujeres 50 [
-;    setxy random-xcor random-ycor
-;    set color red
-;  ]
-;  reset-ticks
+;to go
+;  ask turtles[
+;    set heading random 360
+;    fd 1]
+;  tick
 ;end
 
 
-;;; creando agentes específicos con variables
-;breed [hombres hombre]
-;breed [mujeres mujer]
-;turtles-own [edad]
-;
-;to setup
-;  clear-all
-;  create-hombres 50 [
-;    setxy random-xcor random-ycor
-;    set color white
-;    set edad random 5
-;    set size edad
-;  ]
-;  create-mujeres 50 [
-;    setxy random-xcor random-ycor
-;    set color red
-;    set edad random 5
-;    set size edad
-;  ]
-;  reset-ticks
-;end
+;;; Trayectorias de agentes (wiggle walk)
 
-;;;; variable del patch
-
-;patches-own[alimento]
-;
 ;to setup
 ;  ca
-;  crt 100[
-;    setxy random-xcor random-ycor]
-;
-;  ask patches[
-;    set alimento random 100
-;    set pcolor scale-color green alimento 0 100]
-;
+;  crt 1 [
+;    pen-down]
 ;  reset-ticks
+;end
+;
+;to go
+;  ask turtles[
+;    rt random 91
+;    lt random 91
+;    fd 1]
+;  tick
 ;end
 
 
+;;; vecindarios
 
+;to setup
+;  ca
+;  crt 1
+;end
 
+;to go
+;  ask turtles[
+;    ask neighbors [
+;      set pcolor [color] of myself - 2
+;    ]
+;  ]
+;  stop
+;end
+
+;to go
+;  ask turtles[
+;    ask neighbors4 [
+;      set pcolor [color] of myself - 2
+;    ]
+;  ]
+;  stop
+;end
+
+;to go
+;  ask turtles[
+;    ask patches in-radius 5[
+;      set pcolor [color] of myself - 2
+;    ]
+;    ask patches in-radius 4[
+;      set pcolor black
+;    ]
+;  ]
+;  stop
+;end
 @#$#@#$#@
 GRAPHICS-WINDOW
 129
@@ -109,6 +119,23 @@ BUTTON
 NIL
 setup
 NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+34
+179
+97
+212
+NIL
+go
+T
 1
 T
 OBSERVER
