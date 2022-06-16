@@ -13,17 +13,17 @@ to setup
 end
 
 
-;to go
-;  ask turtles[
-;    ask patches in-radius 5[
-;      set pcolor [color] of myself - 2
-;    ]
-;    ask patches in-radius 4[
-;      set pcolor white
-;    ]
-;  ]
-;  stop
-;end
+to go
+  ask turtles[
+    ask patches in-radius 5[
+      set pcolor [color] of myself - 2
+    ]
+    ask patches in-radius 4[
+      set pcolor white
+    ]
+  ]
+  stop
+end
 
 ;to go
 ;
@@ -39,21 +39,20 @@ end
 ;  stop
 ;end
 
-to go
-
-  ask turtles[
-    let myRadius 3 + random the_radius
-    ask patches in-radius myRadius [
-      set pcolor [color] of myself - 2
-    ]
-    if solo_borde? [
-    ask patches in-radius (myRadius - 1)[
-      set pcolor white
-    ]]
-  ]
-  stop
-end
-
+;to go
+;
+;  ask turtles[
+;    let myRadius 3 + random the_radius
+;    ask patches in-radius myRadius [
+;      set pcolor [color] of myself - 2
+;    ]
+;    if solo_borde? [
+;    ask patches in-radius (myRadius - 1)[
+;      set pcolor white
+;    ]]
+;  ]
+;  stop
+;end
 
 @#$#@#$#@
 GRAPHICS-WINDOW
