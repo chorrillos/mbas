@@ -1,5 +1,3 @@
-;;;; interaccion agente-grilla
-
 globals[pasosmax angulomax]
 patches-own[alimento]
 turtles-own[energia]
@@ -9,43 +7,41 @@ to setup
   set pasosmax 10
   crt 1000[
     setxy random-xcor random-ycor
-    set energia 10
-  ]
-
+    set energia 10]
   ask n-of (count patches / 5)  patches[
     set alimento 10
     set pcolor green]
   reset-ticks
 end
 
-
-
 to go
-  while[count turtles > 0][
-  ask turtles
-  [
-    ifelse alimento > 0[
+  if count turtles <= 0 [stop]
+  ask turtles [
+      ifelse alimento > 0[
       set energia energia + 1
-      set alimento alimento - 1
-    ][
-      set energia energia - 1
-    ]
-    ifelse energia > 0 [
-      let pasos random pasosmax ;temporal
-      set heading random 360
-      fd pasos
-    ][
-      die
-    ]
-  ] ask patches with [pcolor = green and alimento <= 0][
-      set pcolor red
-    ]
+      set alimento alimento - 1][
+        set energia energia - 1]
+      ifelse energia > 0 [
+        let pasos random pasosmax
+        set heading random angulomax
+        fd pasos][
+       die]]
+  ask patches with [pcolor = green and alimento <= 0][
+      set pcolor red]
+  tick
+end
 
-    tick
 
-  ]
+to-report tiempo
+  report ticks
+end
 
-  stop
+to-report restoverde
+  report count (patches with [pcolor = green])
+end
+
+to-report restoalimento
+  report sum [alimento] of patches
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -532,6 +528,23 @@ NetLogo 6.2.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="experiment_1" repetitions="1000" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>count turtles &lt;= 0</exitCondition>
+    <metric>restoverde</metric>
+    <metric>restoalimento</metric>
+    <metric>tiempo</metric>
+    <enumeratedValueSet variable="pasosmax">
+      <value value="1"/>
+      <value value="5"/>
+      <value value="10"/>
+      <value value="20"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="angulomax" first="90" step="90" last="360"/>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default

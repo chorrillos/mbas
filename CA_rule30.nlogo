@@ -1,61 +1,57 @@
-;;;; interaccion agente-grilla
-
-globals[pasosmax angulomax]
-patches-own[alimento]
-turtles-own[energia]
+globals [current-row]
+patches-own [state]
 
 to setup
-  ca
-  set pasosmax 10
-  crt 1000[
-    setxy random-xcor random-ycor
-    set energia 10
-  ]
-
-  ask n-of (count patches / 5)  patches[
-    set alimento 10
-    set pcolor green]
+  clear-all
+  set current-row max-pycor
+  set-initial-patch
+  color-patches
   reset-ticks
 end
 
-
-
 to go
-  while[count turtles > 0][
-  ask turtles
-  [
-    ifelse alimento > 0[
-      set energia energia + 1
-      set alimento alimento - 1
-    ][
-      set energia energia - 1
-    ]
-    ifelse energia > 0 [
-      let pasos random pasosmax ;temporal
-      set heading random 360
-      fd pasos
-    ][
-      die
-    ]
-  ] ask patches with [pcolor = green and alimento <= 0][
-      set pcolor red
-    ]
-
-    tick
-
+  if (current-row = min-pycor) ; de arriba
+    [ stop ]  ;; hasta abajo
+  ask patches with [pycor = current-row]
+    [ do-rule
   ]
+  color-patches
+  set current-row (current-row - 1)
+  tick
+end
 
-  stop
+to do-rule  ;; patch procedure
+  let CenterState state ; mio
+  let LeftState [state] of patch-at -1 0
+  let RightState [state] of patch-at 1 0
+  let BelowPatch patch-at 0 -1
+  ifelse ((LeftState = "alive" and CenterState = "dead" and RightState = "dead") or
+          (LeftState = "dead" and CenterState = "alive" and RightState = "alive") or
+          (LeftState = "dead" and CenterState = "alive" and RightState = "dead") or
+          (LeftState = "dead" and CenterState = "dead" and RightState = "alive"))
+    [ ask BelowPatch [ set state "alive" ] ]
+    [ ask BelowPatch [ set state "dead" ] ]
+
+end
+
+to set-initial-patch
+  ask patches [set state "dead"]
+  ask patch 0 max-pycor [ set state "alive"]
+end
+
+to color-patches
+  ask patches[
+    ifelse state = "alive" [set  pcolor black][set pcolor white]]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-129
-36
-473
-381
+210
+10
+852
+1069
 -1
 -1
-10.2
+10.4
 1
 10
 1
@@ -65,10 +61,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+-30
+30
+-50
+50
 0
 0
 1
@@ -76,11 +72,11 @@ ticks
 30.0
 
 BUTTON
-36
-70
-102
-103
-NIL
+30
+65
+96
+98
+setup
 setup
 NIL
 1
@@ -93,10 +89,10 @@ NIL
 1
 
 BUTTON
-37
-127
-100
-160
+30
+119
+97
+152
 NIL
 go
 T
@@ -108,83 +104,6 @@ NIL
 NIL
 NIL
 1
-
-MONITOR
-34
-177
-102
-222
-alimento
-sum [alimento] of patches
-17
-1
-11
-
-MONITOR
-33
-241
-102
-286
-verdes
-count (patches with [pcolor = green])
-17
-1
-11
-
-PLOT
-483
-195
-763
-345
-Dinamica
-Valores
-Tiempo
-0.0
-35.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"alimento/verdes" 1.0 0 -14439633 true "" "plot sum [alimento] of patches / count patches with [pcolor = green]"
-"turtles" 1.0 1 -7500403 true "" "plot count turtles / count patches"
-
-PLOT
-483
-32
-762
-182
-Histograma
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" "set-plot-y-range 0 5\nset-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1\n"
-PENS
-"default" 1.0 1 -16777216 true "" "histogram [alimento] of patches with [pcolor = green]"
-
-PLOT
-487
-352
-806
-584
-scatterplot
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 2 -16777216 true "" "plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])"
 
 @#$#@#$#@
 ## WHAT IS IT?

@@ -1,61 +1,53 @@
-;;;; interaccion agente-grilla
 
-globals[pasosmax angulomax]
-patches-own[alimento]
-turtles-own[energia]
+patches-own [
+  vivo?
+  vecinos_vivos
+]
 
 to setup
-  ca
-  set pasosmax 10
-  crt 1000[
-    setxy random-xcor random-ycor
-    set energia 10
-  ]
-
-  ask n-of (count patches / 5)  patches[
-    set alimento 10
-    set pcolor green]
+  clear-all
+  ask patches
+    [ ifelse random 100 < vivos_iniciales
+      [ vivir]
+      [ morir ] ]
   reset-ticks
 end
 
+to vivir
+  set vivo? true
+  set pcolor red
+end
 
+to morir
+  set vivo? false
+  set pcolor grey
+end
 
 to go
-  while[count turtles > 0][
-  ask turtles
-  [
-    ifelse alimento > 0[
-      set energia energia + 1
-      set alimento alimento - 1
-    ][
-      set energia energia - 1
-    ]
-    ifelse energia > 0 [
-      let pasos random pasosmax ;temporal
-      set heading random 360
-      fd pasos
-    ][
-      die
-    ]
-  ] ask patches with [pcolor = green and alimento <= 0][
-      set pcolor red
-    ]
-
-    tick
-
-  ]
-
-  stop
+  ask patches
+    [ set vecinos_vivos count neighbors with [vivo?] ]
+  ask patches ; no se juntan los ask patches!
+    [ ifelse vecinos_vivos = 3
+      [ vivir ]
+      [ if vecinos_vivos != 2
+        [ morir ] ] ]
+  tick
 end
+
+
+
+
+; Copyright 1998 Uri Wilensky.
+; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
-129
-36
-473
-381
+210
+10
+622
+423
 -1
 -1
-10.2
+4.0
 1
 10
 1
@@ -65,10 +57,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+-50
+50
+-50
+50
 0
 0
 1
@@ -76,10 +68,10 @@ ticks
 30.0
 
 BUTTON
-36
-70
-102
-103
+40
+58
+106
+91
 NIL
 setup
 NIL
@@ -93,10 +85,10 @@ NIL
 1
 
 BUTTON
-37
-127
-100
-160
+44
+129
+107
+162
 NIL
 go
 T
@@ -109,82 +101,20 @@ NIL
 NIL
 1
 
-MONITOR
-34
-177
-102
-222
-alimento
-sum [alimento] of patches
-17
-1
-11
-
-MONITOR
+SLIDER
 33
-241
-102
-286
-verdes
-count (patches with [pcolor = green])
-17
+200
+205
+233
+vivos_iniciales
+vivos_iniciales
+0
+100
+50.0
 1
-11
-
-PLOT
-483
-195
-763
-345
-Dinamica
-Valores
-Tiempo
-0.0
-35.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"alimento/verdes" 1.0 0 -14439633 true "" "plot sum [alimento] of patches / count patches with [pcolor = green]"
-"turtles" 1.0 1 -7500403 true "" "plot count turtles / count patches"
-
-PLOT
-483
-32
-762
-182
-Histograma
+1
 NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" "set-plot-y-range 0 5\nset-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1\n"
-PENS
-"default" 1.0 1 -16777216 true "" "histogram [alimento] of patches with [pcolor = green]"
-
-PLOT
-487
-352
-806
-584
-scatterplot
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 2 -16777216 true "" "plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])"
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?

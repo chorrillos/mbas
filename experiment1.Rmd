@@ -1,0 +1,33 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+exp1=read.csv("escenarios experiment_1-table.csv",skip=6)
+names(exp1)
+```
+```{r}
+library(ggplot2)
+base=ggplot(data=exp1) +facet_grid(angulomax~pasosmax)
+base + geom_histogram(aes(x = restoverde)) 
+```
+```{r}
+base + geom_boxplot(aes(y = restoverde,x="")) 
+```
+
+```{r}
+base + geom_histogram(aes(x = restoalimento)) 
+```
+```{r}
+base + geom_boxplot(aes(y = restoalimento,x="")) 
+```
+
+```{r}
+base + geom_histogram(aes(x = tiempo)) 
+```
+
+```{r}
+base + geom_boxplot(aes(y = tiempo,x="")) 
+```
