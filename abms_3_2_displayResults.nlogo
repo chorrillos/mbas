@@ -1,88 +1,71 @@
-;;; Movilidad de agentes
+; prepare MONITOR for 'alimento'
 
-to setup
-  ca
-  crt 100
-  reset-ticks
-end
-
-to go
-  ask turtles[
-    fd 1]
-  tick
-end
-
-;;; Trayectorias de agentes (random walk)
-
+;globals[pasosmax angulomax]
+;patches-own[alimento]
+;turtles-own[energia]
+;
 ;to setup
 ;  ca
-;  crt 1 [
-;    pen-down]
+;  set pasosmax 10
+;  crt 1000[
+;    setxy random-xcor random-ycor
+;    set energia 10
+;  ]
+;
+;  ask n-of (count patches / 5)  patches[
+;    set alimento 10
+;    set pcolor green]
 ;  reset-ticks
 ;end
 ;
-;to go
-;  ask turtles[
-;    set heading random 360
-;    fd 1]
-;  tick
-;end
-
-
-;;; Trayectorias de agentes (wiggle walk)
-
-;to setup
-;  ca
-;  crt 1 [
-;    pen-down]
-;  reset-ticks
-;end
+;
 ;
 ;to go
-;  ask turtles[
-;    rt random 91
-;    lt random 91
-;    fd 1]
-;  tick
-;end
-
-
-;;; vecindarios
-
-;to setup
-;  ca
-;  crt 1
-;end
-
-;to go
-;  ask turtles[
-;    ask neighbors [
-;      set pcolor [color] of myself - 2
+;  while[count turtles > 0][
+;  ask turtles
+;  [
+;    ifelse alimento > 0[
+;      set energia energia + 1
+;      set alimento alimento - 1
+;    ][
+;      set energia energia - 1
 ;    ]
+;    ifelse energia > 0 [
+;      let pasos random pasosmax ;temporal
+;      set heading random 360
+;      fd pasos
+;    ][
+;      die
+;    ]
+;  ] ask patches with [pcolor = green and alimento <= 0][
+;      set pcolor red
+;    ]
+;
+;    tick
+;
 ;  ]
+;
 ;  stop
 ;end
 
-;to go
-;  ask turtles[
-;    ask neighbors4 [
-;      set pcolor [color] of myself - 2
-;    ]
-;  ]
-;  stop
-;end
+;;;; EXTRA
 
-;to go
-;  ask turtles[
-;    ask patches in-radius 5[
-;      set pcolor [color] of myself - 2
-;    ]
-;    ask patches in-radius 4[
-;      set pcolor black
-;    ]
-;  ]
-;  stop
-;end
+;output-print count (patches with [pcolor = green])
+
+;;; BARS
+; plot sum [alimento] of patches / count patches with [pcolor = green]
+; plot count turtles / count patches
+
+;;; HISTOGRAM - pen update I
+; histogram [alimento] of patches with [pcolor = green]
+
+;;; HISTOGRAM - pen update II
+; set-plot-y-range 0 5
+; set-plot-x-range 0 max ([alimento] of patches with [pcolor = green] ) + 1
+
+;;; SCATTERPLOT
+; plotxy (sum [alimento] of patches (count patches with [pcolor = green] )
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 129
@@ -110,40 +93,6 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
-
-BUTTON
-33
-122
-99
-155
-NIL
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-34
-179
-97
-212
-NIL
-go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
 
 @#$#@#$#@
 ## WHAT IS IT?
