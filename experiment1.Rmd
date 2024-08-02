@@ -1,33 +1,28 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Analisis del Experimento"
+output:
+  html_document:
+    df_print: paged
 ---
 
 
 ```{r}
+rm(list = ls())
 exp1=read.csv("escenarios experiment_1-table.csv",skip=6)
 names(exp1)
 ```
 ```{r}
 library(ggplot2)
-base=ggplot(data=exp1) +facet_grid(angulomax~pasosmax)
-base + geom_histogram(aes(x = restoverde)) 
-```
-```{r}
-base + geom_boxplot(aes(y = restoverde,x="")) 
+
+base=ggplot(data=exp1) 
+base + geom_point(aes(x=pasosmax,y=restoalimento))
+
 ```
 
-```{r}
-base + geom_histogram(aes(x = restoalimento)) 
-```
-```{r}
-base + geom_boxplot(aes(y = restoalimento,x="")) 
-```
 
 ```{r}
-base + geom_histogram(aes(x = tiempo)) 
+base + geom_point(aes(x=angulomax,y=restoalimento))
 ```
-
 ```{r}
-base + geom_boxplot(aes(y = tiempo,x="")) 
+summary(lm(restoalimento~pasosmax+angulomax,data=exp1))
 ```

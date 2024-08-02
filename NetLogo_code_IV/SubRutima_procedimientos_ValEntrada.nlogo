@@ -1,82 +1,32 @@
-;;;; interaccion agente-grilla
-
-globals[pasosmax angulomax]
-patches-own[alimento]
-turtles-own[energia]
-
 to setup
   ca
-  set pasosmax 10
-  crt 1000[
-    setxy random-xcor random-ycor
-    set energia 10
-  ]
-
-  ask n-of (count patches / 5)  patches[
-    set alimento 10
-    set pcolor green]
+  crt 4 [
+    if posicionCentro = False[
+      setxy  random-xcor random-ycor]]
   reset-ticks
 end
 
-
-
 to go
-  while[count turtles > 0][
-  ask turtles
-  [
-    ifelse alimento > 0[
-      set energia energia + 1
-      set alimento alimento - 1   ; CREA MONITOR: sum [alimento] of patches
-    ][
-      set energia energia - 1
-    ]
-    ifelse energia > 0 [
-      let pasos random pasosmax ;temporal
-      set heading random 360
-      fd pasos
-    ][
-      die
-    ]
-  ] ask patches with [pcolor = green and alimento <= 0][
-      set pcolor red
-    ]
-
-    tick
-;    output-print count (patches with [pcolor = green]) ; OUTPUT BOX
-
-  ]
-
+  ask turtles [ crear_poligono lados (who + 1)] ;who: largo segun id
   stop
 end
 
-;;;;;;PLOTS
-
-;bars and lines
-; line
-;plot sum [alimento] of patches / count patches with [pcolor = green]
-; bar
-;plot count turtles / count patches
-
-;histogram 1
-;histogram [alimento] of patches with [pcolor = green]
-
-;histogram 2
-;histogram [alimento] of patches with [pcolor = green]
-;set-plot-y-range 0 5
-;set-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1
-
-;scatterplot
-;
-;plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])
+to crear_poligono [num_lados largo_lado]
+  pen-down
+  repeat num_lados [
+    fd largo_lado
+    rt 360 / num_lados
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-129
-36
-473
-381
+210
+10
+647
+448
 -1
 -1
-10.2
+13.0
 1
 10
 1
@@ -97,10 +47,10 @@ ticks
 30.0
 
 BUTTON
-36
-70
-102
-103
+37
+68
+151
+101
 NIL
 setup
 NIL
@@ -115,9 +65,9 @@ NIL
 
 BUTTON
 37
-127
-100
-160
+119
+150
+152
 NIL
 go
 T
@@ -130,82 +80,31 @@ NIL
 NIL
 1
 
-MONITOR
-34
-177
-102
-222
-alimento
-sum [alimento] of patches
-17
+SWITCH
+23
+187
+175
+220
+posicionCentro
+posicionCentro
 1
-11
-
-MONITOR
-33
-241
-102
-286
-verdes
-count (patches with [pcolor = green])
-17
 1
-11
+-1000
 
-PLOT
-483
-195
-763
-345
-Dinamica
-Valores
-Tiempo
-0.0
-35.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"alimento/verdes" 1.0 0 -14439633 true "" "plot sum [alimento] of patches / count patches with [pcolor = green]"
-"turtles" 1.0 1 -7500403 true "" "plot count turtles / count patches"
-
-PLOT
-483
-32
-762
-182
-Histograma
+SLIDER
+24
+228
+174
+261
+lados
+lados
+3
+8
+3.0
+1
+1
 NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" "set-plot-y-range 0 5\nset-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1\n"
-PENS
-"default" 1.0 1 -16777216 true "" "histogram [alimento] of patches with [pcolor = green]"
-
-PLOT
-487
-352
-806
-584
-scatterplot
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 2 -16777216 true "" "plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])"
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?

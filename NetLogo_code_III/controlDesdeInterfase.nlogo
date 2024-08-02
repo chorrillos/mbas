@@ -1,82 +1,67 @@
-;;;; interaccion agente-grilla
-
-globals[pasosmax angulomax]
-patches-own[alimento]
-turtles-own[energia]
+;;; Movilidad de agentes
 
 to setup
   ca
-  set pasosmax 10
-  crt 1000[
+  crt 2 [          ;CREAR: slider Poblacion
+    set shape "person"
     setxy random-xcor random-ycor
-    set energia 10
   ]
-
-  ask n-of (count patches / 5)  patches[
-    set alimento 10
-    set pcolor green]
+  ask patches [
+    set pcolor white ; use inputbox?
+  ]
   reset-ticks
 end
 
 
-
 to go
-  while[count turtles > 0][
-  ask turtles
-  [
-    ifelse alimento > 0[
-      set energia energia + 1
-      set alimento alimento - 1   ; CREA MONITOR: sum [alimento] of patches
-    ][
-      set energia energia - 1
+  ask turtles[
+    ask patches in-radius 5[
+      set pcolor [color] of myself - 2
     ]
-    ifelse energia > 0 [
-      let pasos random pasosmax ;temporal
-      set heading random 360
-      fd pasos
-    ][
-      die
+    ask patches in-radius 4[
+      set pcolor white
     ]
-  ] ask patches with [pcolor = green and alimento <= 0][
-      set pcolor red
-    ]
-
-    tick
-;    output-print count (patches with [pcolor = green]) ; OUTPUT BOX
-
   ]
-
   stop
 end
 
-;;;;;;PLOTS
-
-;bars and lines
-; line
-;plot sum [alimento] of patches / count patches with [pcolor = green]
-; bar
-;plot count turtles / count patches
-
-;histogram 1
-;histogram [alimento] of patches with [pcolor = green]
-
-;histogram 2
-;histogram [alimento] of patches with [pcolor = green]
-;set-plot-y-range 0 5
-;set-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1
-
-;scatterplot
+;to go
 ;
-;plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])
+;  ask turtles[
+;    let myRadius 3 + random the_radius  ;crear CHOOSER
+;    ask patches in-radius myRadius [
+;      set pcolor [color] of myself - 2
+;    ]
+;    ask patches in-radius (myRadius - 1)[
+;      set pcolor white
+;    ]
+;  ]
+;  stop
+;end
+
+;to go
+;
+;  ask turtles[
+;    let myRadius 3 + random the_radius
+;    ask patches in-radius myRadius [
+;      set pcolor [color] of myself - 2
+;    ]
+;    if solo_borde? [                ;crear SWITCH
+;    ask patches in-radius (myRadius - 1)[
+;      set pcolor white
+;    ]]
+;  ]
+;  stop
+;end
 @#$#@#$#@
 GRAPHICS-WINDOW
-129
-36
-473
-381
+196
+62
+489
+356
 -1
 -1
-10.2
+6.95122
 1
 10
 1
@@ -86,10 +71,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+-20
+20
+-20
+20
 0
 0
 1
@@ -97,10 +82,10 @@ ticks
 30.0
 
 BUTTON
-36
-70
-102
-103
+197
+30
+335
+63
 NIL
 setup
 NIL
@@ -114,10 +99,10 @@ NIL
 1
 
 BUTTON
-37
-127
-100
-160
+351
+30
+488
+63
 NIL
 go
 T
@@ -129,83 +114,6 @@ NIL
 NIL
 NIL
 1
-
-MONITOR
-34
-177
-102
-222
-alimento
-sum [alimento] of patches
-17
-1
-11
-
-MONITOR
-33
-241
-102
-286
-verdes
-count (patches with [pcolor = green])
-17
-1
-11
-
-PLOT
-483
-195
-763
-345
-Dinamica
-Valores
-Tiempo
-0.0
-35.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"alimento/verdes" 1.0 0 -14439633 true "" "plot sum [alimento] of patches / count patches with [pcolor = green]"
-"turtles" 1.0 1 -7500403 true "" "plot count turtles / count patches"
-
-PLOT
-483
-32
-762
-182
-Histograma
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" "set-plot-y-range 0 5\nset-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1\n"
-PENS
-"default" 1.0 1 -16777216 true "" "histogram [alimento] of patches with [pcolor = green]"
-
-PLOT
-487
-352
-806
-584
-scatterplot
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 2 -16777216 true "" "plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])"
 
 @#$#@#$#@
 ## WHAT IS IT?

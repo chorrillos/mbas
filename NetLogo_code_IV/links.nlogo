@@ -1,82 +1,115 @@
-;;;; interaccion agente-grilla
+;globals[num]
+;to setup
+;  ca
+;  set num 100
+;  crt num [
+;    set color gray
+;    setxy random-xcor random-ycor
+;    ]
+;  reset-ticks
+;end
 
-globals[pasosmax angulomax]
-patches-own[alimento]
-turtles-own[energia]
+;to go
+;ask turtles [
+;    set color gray
+;    rt random 360
+;    fd 1]
+;  ask n-of (num / 2) turtles
+;  [
+;    create-link-with one-of other turtles
+;  ]
+;  ask turtles with [not any? link-neighbors][set color red]
+;  wait 0.2
+;  ask links [die]
+;
+;  tick
+;end
 
+
+;;;;;;;
+
+;globals[num]
+;to setup
+;  ca
+;  set num 100
+;  crt num [
+;    set color gray
+;    setxy random-xcor random-ycor
+;    ]
+;   ask turtles
+;  [
+;    create-link-with one-of other turtles
+;  ]
+;  reset-ticks
+;end
+;
+;
+;to go
+;  ask turtles[set color grey]
+;
+;  ask links [
+;    set thickness 0
+;    set color gray
+;    set shape "puntos"
+;  ]
+;  ask one-of turtles[
+;    ask one-of my-links [
+;      set shape "curvita"
+;      set color green
+;      ask both-ends [ set color blue]
+;    ]
+;  ]
+;
+;  tick
+;  wait 1
+;end
+
+;;;;;;;;;
+
+
+globals[num]
 to setup
   ca
-  set pasosmax 10
-  crt 1000[
+  clear-all
+  set num 15
+  set-default-shape turtles "person"
+  crt num [
     setxy random-xcor random-ycor
-    set energia 10
-  ]
-
-  ask n-of (count patches / 5)  patches[
-    set alimento 10
-    set pcolor green]
+    set color gray]
   reset-ticks
 end
 
 
-
 to go
-  while[count turtles > 0][
-  ask turtles
-  [
-    ifelse alimento > 0[
-      set energia energia + 1
-      set alimento alimento - 1   ; CREA MONITOR: sum [alimento] of patches
-    ][
-      set energia energia - 1
-    ]
-    ifelse energia > 0 [
-      let pasos random pasosmax ;temporal
-      set heading random 360
-      fd pasos
-    ][
-      die
-    ]
-  ] ask patches with [pcolor = green and alimento <= 0][
-      set pcolor red
-    ]
-
-    tick
-;    output-print count (patches with [pcolor = green]) ; OUTPUT BOX
-
-  ]
-
-  stop
+  ask turtles[
+    create-links-with n-of 1 other turtles
+    ;create-link-with one-of other turtles ; alternative
+    set color grey
+    set heading random 180
+    fd 1]
+ repeat 100 [
+    layout-spring turtles links 1 10 3 ] ; spring_constant spring_length repulsion
+  ask links [
+    set thickness 0
+    set color gray
+    set shape "puntos"]
+  ask one-of turtles[
+    ask one-of my-links [
+      set shape "curvita"
+      set color green
+      ask both-ends [ set color blue]]]
+  tick
+  wait 0.3
 end
-
-;;;;;;PLOTS
-
-;bars and lines
-; line
-;plot sum [alimento] of patches / count patches with [pcolor = green]
-; bar
-;plot count turtles / count patches
-
-;histogram 1
-;histogram [alimento] of patches with [pcolor = green]
-
-;histogram 2
-;histogram [alimento] of patches with [pcolor = green]
-;set-plot-y-range 0 5
-;set-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1
-
-;scatterplot
-;
-;plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])
 @#$#@#$#@
 GRAPHICS-WINDOW
-129
-36
-473
-381
+210
+10
+647
+448
 -1
 -1
-10.2
+13.0
 1
 10
 1
@@ -97,10 +130,10 @@ ticks
 30.0
 
 BUTTON
-36
-70
+45
+69
+111
 102
-103
 NIL
 setup
 NIL
@@ -114,10 +147,10 @@ NIL
 1
 
 BUTTON
-37
-127
-100
-160
+40
+143
+103
+176
 NIL
 go
 T
@@ -131,81 +164,15 @@ NIL
 1
 
 MONITOR
-34
-177
+42
+269
 102
-222
-alimento
-sum [alimento] of patches
+314
+isolates
+count turtles with [color = red]
 17
 1
 11
-
-MONITOR
-33
-241
-102
-286
-verdes
-count (patches with [pcolor = green])
-17
-1
-11
-
-PLOT
-483
-195
-763
-345
-Dinamica
-Valores
-Tiempo
-0.0
-35.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"alimento/verdes" 1.0 0 -14439633 true "" "plot sum [alimento] of patches / count patches with [pcolor = green]"
-"turtles" 1.0 1 -7500403 true "" "plot count turtles / count patches"
-
-PLOT
-483
-32
-762
-182
-Histograma
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" "set-plot-y-range 0 5\nset-plot-x-range 0 max ([alimento] of patches with [pcolor = green]) + 1\n"
-PENS
-"default" 1.0 1 -16777216 true "" "histogram [alimento] of patches with [pcolor = green]"
-
-PLOT
-487
-352
-806
-584
-scatterplot
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 2 -16777216 true "" "plotxy (sum [alimento] of patches)  (count patches with [pcolor = green])"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -559,6 +526,28 @@ default
 0.0
 -0.2 0 0.0 1.0
 0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+Line -7500403 true 150 150 90 180
+Line -7500403 true 150 150 210 180
+
+curvita
+2.0
+-0.2 1 4.0 4.0
+0.0 1 1.0 0.0
+0.2 1 4.0 4.0
+link direction
+true
+0
+Line -7500403 true 150 150 90 180
+Line -7500403 true 150 150 210 180
+
+puntos
+0.0
+-0.2 0 0.0 1.0
+0.0 1 2.0 2.0
 0.2 0 0.0 1.0
 link direction
 true
